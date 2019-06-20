@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Notepad</string>
+    <string name="action_settings">Email Us</string>
+    <string name="title_activity_note">Edit Note</string>
+    <string name="note_title_hint">Note Title</string>
+    <string name="note_body_hint">Note Text</string>
+</resources>
