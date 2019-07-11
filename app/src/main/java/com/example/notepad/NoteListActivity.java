@@ -15,8 +15,9 @@ import android.widget.ListView;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
+    private NoteRecyclerAdapter noteRecyclerAdapter;
 
- //   private ArrayAdapter<NoteInfo> mAdapterNotes;    related to list view
+    //   private ArrayAdapter<NoteInfo> mAdapterNotes;    related to list view
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +37,15 @@ public class NoteListActivity extends AppCompatActivity {
         initializeDisplayContent();
     }
 
+    /*Every time our noteListActivity resumes we refresh our data set
+    Recycler View Adapter has fine grain control to notify dataSet change on large DataSets
+     */
+
     @Override
     protected void onResume() {
         super.onResume();
 //        mAdapterNotes.notifyDataSetChanged(); related to list view
+        noteRecyclerAdapter.notifyDataSetChanged();
     }
 
     private void initializeDisplayContent() {
@@ -61,10 +67,19 @@ public class NoteListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });*/
-
-  final RecyclerView recyclerView = findViewById(R.id.list_notes);
+//This is where we set up the recycler view
+  final RecyclerView recyclerNotes = findViewById(R.id.list_notes);
   final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
-  recyclerView.setLayoutManager(notesLayoutManager);
+  recyclerNotes.setLayoutManager(notesLayoutManager);
+
+  //Get the notes we want to display
+        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+
+        //Instance of our NoteRecyclerAdapter
+        noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+        //Associate this adapter with recycler view
+        recyclerNotes.setAdapter(noteRecyclerAdapter);
+
     }
 
 }
