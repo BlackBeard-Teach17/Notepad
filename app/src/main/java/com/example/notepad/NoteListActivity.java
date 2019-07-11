@@ -37,7 +37,7 @@ public class NoteListActivity extends AppCompatActivity {
         initializeDisplayContent();
     }
 
-    /*Every time our noteListActivity resumes we refresh our data set
+    /**Every time our noteListActivity resumes we refresh our data set
     Recycler View Adapter has fine grain control to notify dataSet change on large DataSets
      */
 
