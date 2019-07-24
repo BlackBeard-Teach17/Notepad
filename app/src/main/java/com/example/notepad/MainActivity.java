@@ -3,7 +3,7 @@ package com.example.notepad;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,6 +22,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private NoteRecyclerAdapter noteRecyclerAdapter;
+    private RecyclerView recyclerItems;
+    private LinearLayoutManager notesLayoutManager;
+    private CourseRecyclerAdapter courseRecyclerAdapter;
+    private GridLayoutManager courseLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,18 +61,39 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeDisplayContent() {
 //This is where we set up the recycler view
-        final RecyclerView recyclerNotes = findViewById(R.id.list_items);
-        final LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
-        recyclerNotes.setLayoutManager(notesLayoutManager);
+        recyclerItems = findViewById(R.id.list_items);
+        notesLayoutManager = new LinearLayoutManager(this);
+        courseLayoutManager = new GridLayoutManager(this, 2);
 
         //Get the notes we want to display
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-
         //Instance of our NoteRecyclerAdapter
         noteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
-        //Associate this adapter with recycler view
-        recyclerNotes.setAdapter(noteRecyclerAdapter);
 
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+        courseRecyclerAdapter = new CourseRecyclerAdapter(this, courses);
+        //Associate this adapter with recycler view
+        displayNotes();
+    }
+
+    private void displayNotes() {
+        recyclerItems.setLayoutManager(notesLayoutManager);
+        recyclerItems.setAdapter(noteRecyclerAdapter);
+
+        selectNavigationMenuItem(R.id.nav_notes);
+    }
+
+    private void selectNavigationMenuItem(int id) {
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
+        menu.findItem(id).setChecked(true);
+    }
+
+    private void displayCourses()
+    {
+        recyclerItems.setLayoutManager(courseLayoutManager);
+        recyclerItems.setAdapter(courseRecyclerAdapter);
+        selectNavigationMenuItem(R.id.nav_courses);
     }
     @Override
     public void onBackPressed() {
@@ -108,14 +133,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_tools) {
-
+        if (id == R.id.nav_notes) {
+            displayNotes();
+        } else if (id == R.id.nav_courses) {
+            displayCourses();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
